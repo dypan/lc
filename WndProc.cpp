@@ -141,9 +141,9 @@ void CreateListBox(HWND parent)
             tinyxml2::XMLElement *title = childElement->FirstChildElement("title");
             const char* wstr = title->GetText();
             //获取输入缓存大小
-            int sBufSize=strlen(wstr);
+            int sBufSize = strlen(wstr);
             //获取输出缓存大小
-            DWORD dBufSize=MultiByteToWideChar(CP_UTF8, 0, wstr, -1, 0, 0);
+            DWORD dBufSize =MultiByteToWideChar(CP_UTF8, 0, wstr, -1, 0, 0);
 
             wchar_t * dBuf=new wchar_t[dBufSize];
             memset(dBuf, 0, dBufSize * sizeof(*dBuf));
@@ -159,7 +159,7 @@ void CreateListBox(HWND parent)
             dBufSize = MultiByteToWideChar(CP_UTF8, 0, descriptionStr, -1, 0, 0);
             dBuf = new wchar_t[dBufSize];
             memset(dBuf, 0, dBufSize * sizeof(*dBuf));
-            nRet=MultiByteToWideChar(CP_UTF8, 0, descriptionStr, sBufSize, dBuf, dBufSize);
+            nRet = MultiByteToWideChar(CP_UTF8, 0, descriptionStr, sBufSize, dBuf, dBufSize);
             feed f;
             f.content = dBuf;
             data[index++] = f;
@@ -600,6 +600,7 @@ LRESULT CALLBACK LeftWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                                 int index = SendMessage((HWND)lParam, LB_GETCARETINDEX, 0, 0);
                                 SendMessage((HWND)lParam, LB_GETTEXT, (LPARAM)index, (WPARAM)Buffer);
                                 SetWindowText(g_hmain, Buffer); 
+                                // https://msdn.microsoft.com/en-us/library/bb508508(v=vs.85).aspx
                                 DisplayHTMLStr(g_hrightwnd, data[index].content);
                             }
                     }

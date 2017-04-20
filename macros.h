@@ -1,8 +1,8 @@
 
-#define MAIN_WINDOW_CLASS		"Main Window"
-#define LEFT_WINDOW_CLASS		"Left Window"
-#define RIGHT_WINDOW_CLASS		"Right Window"
-#define BUTTON_CLASS			"Button"	
+#define MAIN_WINDOW_CLASS		L"Main Window"
+#define LEFT_WINDOW_CLASS		L"Left Window"
+#define RIGHT_WINDOW_CLASS		L"Right Window"
+#define BUTTON_CLASS			L"Button"	
 #define RESET					256
 #define WIDTH_ADJUST			2
 #define MIN_RESIZABLE_WIDTH		400

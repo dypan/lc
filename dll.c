@@ -16,7 +16,7 @@
  * ignore the default libraries. This will reduce code size.
  */
 
-#include <windows.h>
+#include <Windows.h>
 #include <exdisp.h>		/* Defines of stuff like IWebBrowser2. This is an include file with Visual C 6 and above */
 #include <mshtml.h>		/* Defines of stuff like IHTMLDocument2. This is an include file with Visual C 6 and above */
 #include <crtdbg.h>		/* for _ASSERT() */
@@ -838,6 +838,18 @@ long WINAPI DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 	{
 		// Ok, now the pointer to our IWebBrowser2 object is in 'webBrowser2', and so its VTable is
 		// webBrowser2->lpVtbl.
+       IConnectionPointContainer* pCPC = NULL; 
+       HRESULT hrr = webBrowser2->lpVtbl->QueryInterface(webBrowser2, &IID_IConnectionPointContainer, (void **)&pCPC);
+       if(hrr == S_OK)
+       {
+           IConnectionPoint* pCP = NULL;
+           hrr = pCPC->lpVtbl->FindConnectionPoint(pCPC, &DIID_HTMLElementEvents2, (void **)&pCP);
+           
+           if(hrr == S_OK)
+           {
+               int i = 0;
+           }
+       }
 
 		// Before we can get_Document(), we actually need to have some HTML page loaded in the browser. So,
 		// let's load an empty HTML page. Then, once we have that empty page, we can get_Document() and
@@ -909,6 +921,7 @@ bad:			htmlDoc2->lpVtbl->Release(htmlDoc2);
 			lpDispatch->lpVtbl->Release(lpDispatch);
 		}
 
+		webBrowser2->lpVtbl->Refresh2(webBrowser2, REFRESH_NORMAL);
 		// Release the IWebBrowser2 object.
 		webBrowser2->lpVtbl->Release(webBrowser2);
 	}
