@@ -24,7 +24,6 @@
 
 
 
-
 #if defined(_MSC_VER)
 #pragma data_seg("Shared")
 #endif
@@ -836,21 +835,12 @@ long WINAPI DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 	// object, so we can call some of the functions in the former's table.
 	if (!browserObject->lpVtbl->QueryInterface(browserObject, &IID_IWebBrowser2, (void**)&webBrowser2))
 	{
-		// Ok, now the pointer to our IWebBrowser2 object is in 'webBrowser2', and so its VTable is
-		// webBrowser2->lpVtbl.
-       IConnectionPointContainer* pCPC = NULL; 
-       HRESULT hrr = webBrowser2->lpVtbl->QueryInterface(webBrowser2, &IID_IConnectionPointContainer, (void **)&pCPC);
-       if(hrr == S_OK)
-       {
-           IConnectionPoint* pCP = NULL;
-           hrr = pCPC->lpVtbl->FindConnectionPoint(pCPC, &DIID_HTMLElementEvents2, (void **)&pCP);
-           
-           if(hrr == S_OK)
-           {
-               int i = 0;
-           }
-       }
-
+        VARIANT_BOOL isBusy;
+		webBrowser2->lpVtbl->get_Busy(webBrowser2, &isBusy);
+        if(isBusy == VARIANT_TRUE)
+        {
+            OutputDebugString(L"isBusy\n");
+        }
 		// Before we can get_Document(), we actually need to have some HTML page loaded in the browser. So,
 		// let's load an empty HTML page. Then, once we have that empty page, we can get_Document() and
 		// write() to stuff our HTML string into it.
@@ -859,7 +849,10 @@ long WINAPI DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 		myURL.bstrVal = SysAllocString(L"about:blank");
 
 		// Call the Navigate2() function to actually display the page.
-		webBrowser2->lpVtbl->Navigate2(webBrowser2, &myURL, 0, 0, 0, 0);
+        if(isBusy == VARIANT_FALSE)
+        {
+            webBrowser2->lpVtbl->Navigate2(webBrowser2, &myURL, 0, 0, 0, 0);
+        }
 
 		// Free any resources (including the BSTR).
 		VariantClear(&myURL);
@@ -901,7 +894,7 @@ long WINAPI DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 						{
 							// Pass the VARIENT with its BSTR to write() in order to shove our desired HTML string
 							// into the body of that empty page we created above.
-							htmlDoc2->lpVtbl->write(htmlDoc2, sfArray);
+							htmlDoc2->lpVtbl->writeln(htmlDoc2, sfArray);
 
 							// Normally, we'd need to free our BSTR, but SafeArrayDestroy() does it for us
 //							SysFreeString(bstr);
@@ -921,7 +914,7 @@ bad:			htmlDoc2->lpVtbl->Release(htmlDoc2);
 			lpDispatch->lpVtbl->Release(lpDispatch);
 		}
 
-		webBrowser2->lpVtbl->Refresh2(webBrowser2, REFRESH_NORMAL);
+		webBrowser2->lpVtbl->Refresh(webBrowser2);
 		// Release the IWebBrowser2 object.
 		webBrowser2->lpVtbl->Release(webBrowser2);
 	}

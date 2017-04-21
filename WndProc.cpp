@@ -19,6 +19,7 @@ extern	HWND		g_hmain;
 
 typedef struct feed_{
     TCHAR *content;
+    TCHAR *url;
 } feed;
 
 feed data[100];
@@ -105,6 +106,22 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
      return hFont ;
 }
 
+TCHAR* GetContent(tinyxml2::XMLElement *childElement, char *nodeName)
+{
+    size_t sBufSize; 
+    DWORD dBufSize = 0;
+    
+    tinyxml2::XMLElement *description = childElement->FirstChildElement(nodeName);
+    const char* descriptionStr = description->GetText();
+    sBufSize = strlen(descriptionStr);
+    wchar_t * dBuf=new wchar_t[dBufSize];
+    dBufSize = MultiByteToWideChar(CP_UTF8, 0, descriptionStr, -1, 0, 0);
+    dBuf = new wchar_t[dBufSize];
+    memset(dBuf, 0, dBufSize * sizeof(*dBuf));
+    MultiByteToWideChar(CP_UTF8, 0, descriptionStr, sBufSize, dBuf, dBufSize);
+    return dBuf;
+}
+
 void CreateListBox(HWND parent)
 {
     HWND hWnd = parent;
@@ -162,6 +179,7 @@ void CreateListBox(HWND parent)
             nRet = MultiByteToWideChar(CP_UTF8, 0, descriptionStr, sBufSize, dBuf, dBufSize);
             feed f;
             f.content = dBuf;
+            f.url = GetContent(childElement, "link");
             data[index++] = f;
         }
     }
@@ -602,6 +620,7 @@ LRESULT CALLBACK LeftWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
                                 SetWindowText(g_hmain, Buffer); 
                                 // https://msdn.microsoft.com/en-us/library/bb508508(v=vs.85).aspx
                                 DisplayHTMLStr(g_hrightwnd, data[index].content);
+                                //DisplayHTMLPage(g_hrightwnd, data[index].url);
                             }
                     }
                 }
