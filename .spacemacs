@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -31,27 +31,28 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     ;;markdown
+     sql
+     javascript
+     html
+     windows-scripts
+     ;;python
+     ;;csharp
+     ;;java
+     colors 
+     ;;(colors :variables colors-enable-nyan-cat-progress-bar t)
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     c-c++
-     gtags
+     ycmd
      auto-completion
-     ;; better-defaults
-     emacs-lisp
-     ;; git
-     ;; markdown
-     ;; org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
-     ;; syntax-checking
-     ;; version-control
-     )
+     c-c++
+     ;;csharp
+     gtags 
+    )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -128,16 +129,19 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
+   ;;dichromacy
    dotspacemacs-themes '(
                          spacemacs-dark
                          spacemacs-light
+                         anti-zenburn
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+   dotspacemacs-default-font '("Fira Code"
+                               ;;"DejaVu Sans Mono"
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -254,16 +258,16 @@ values."
    ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
    ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
    ;; This variable can also be set to a property list for finer control:
-   ;; '(:relative nil
-   ;;   :disabled-for-modes dired-mode
-   ;;                       doc-view-mode
-   ;;                       markdown-mode
-   ;;                       org-mode
-   ;;                       pdf-view-mode
-   ;;                       text-mode
-   ;;   :size-limit-kb 1000)
+   ;;'(:relative nil
+   ;;  :disabled-for-modes dired-mode
+   ;;                      doc-view-mode
+   ;;                      markdown-mode
+   ;;                      org-mode
+   ;;                      pdf-view-mode
+   ;;                      text-mode
+   ;;  :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers 'nil
+   dotspacemacs-line-numbers 'relative
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -304,9 +308,25 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;;(setq-default dotspacemacs-themes '(sanityinc-solarized-light))
-  (setq compilation-directory-locked nil)
-  )
+  
+  (sp-pair "'" :actions :rem)
+  (sp-pair "\"" :actions :rem)
+
+(setq url-proxy-services '(("no_proxy" . "work\\.com")
+                           ("http" . "localhost:1080")
+                           ("https" . "localhost:1080")))
+;;(setq-default
+   ;; ... other configurations...
+ ;;dotspacemacs-themes '(sanityinc-solarized-dark))
+(setq compilation-directory-locked nil)
+(modify-syntax-entry ?_ "w")
+
+(setq eclim-eclipse-dirs '("D:\\ProgramFiles\\eclipse")
+	  eclimd-default-workspace "d:\\default"
+      eclim-executable "D:\\ProgramFiles\\eclipse\\plugins\\org.eclim_2.7.0\\bin\\eclim.bat")
+;;(javascript :variables tern-command '("node" "c:/users/dypan/appdata/roaming/npm/node_modules/tern/bin/tern"))
+;;(add-to-list 'load-path "c:/users/dypan/appdata/roaming/npm/node_modules/tern/bin/tern")
+)
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -315,24 +335,65 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
-  (add-hook 'c-mode-common-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-  (setq powerline-default-separator 'arrow)
-  (setq dotspacemacs-mode-line-unicode-symbols nil)
-  (global-hl-line-mode -1)
   
-  ;; run build
+  ;;(setq powerline-default-separator 'arrow)
+  ;;(setq powerline-default-separator 'bar)
+  
+  (setq powerline-default-separator 'alternate)
+  (setq dotspacemacs-mode-line-unicode-symbols nil)
+  ;;(setq ycmd-server-command '("c:/Users/dypan/AppData/Local/Programs/Python/Python36/python.exe" "-u" "c:/edithome/youcompleteme/YouCompleteMe/third_party/ycmd/ycmd"))
+  (setq ycmd-server-command '("c:/Users/dypan/AppData/Local/Programs/Python/Python36/python.exe" "-u" "c:/edithome/YouCompleteMe/third_party/ycmd/ycmd"))
+  ;;(setq ycmd-server-command '("c:/Users/dypan/AppData/Local/Programs/Python/Python36/python.exe" "-u" "f:/spacemacs/YouCompleteMe/third_party/ycmd/ycmd"))
+  
+  ;;(setq-default omnisharp-server-executable-path "F:/spacemacs/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Release/OmniSharp.exe")
+  
+  ;;(setq ycmd-server-command '("c:/Users/dypan/AppData/Local/Programs/Python/Python36/python.exe" "-u" "D:/youcompleteme/YouCompleteMe/third_party/ycmd/ycmd"))
+  
+  (setq-default omnisharp--curl-executable-path "C:/Program\\ Files/Git/usr/bin/curl.exe")
+  
+  ;;(setq-default omnisharp-server-executable-path "D:/youcompleteme/YouCompleteMe/third_party/ycmd/third_party/OmniSharpServer/OmniSharp/bin/Debug/OmniSharp.exe")
+  (setq omnisharp-debug t)
+  ;;(setq process-connection-type nil)
+  (setq-default omnisharp-server-executable-path "D:/lc/omnisharp-roslyn/build/omnisharp-win-x64/OmniSharp.exe")
+  ;;(setq-default dotspacemacs-configuration-layers
+  ;;              '((c-c++ :variables c-c++-enable-clang-support t)))
+  (add-hook 'c-mode-common-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+  ;; Bind clang-format-region to C-M-tab in all modes:
+  (global-set-key [C-c u] 'clang-format-region)
+  (require 'helm-config)
+  ;; Bind clang-format-buffer to tab on the c++-mode only:
+  (add-hook 'c++-mode-hook 'clang-format-bindings)
+  (defun clang-format-bindings ()
+    (define-key c++-mode-map [C-c b] 'clang-format-buffer))
+  (setq ycmd-global-config "D:/code/lc/.ycm_extra_conf.py")
+  ;;(setq ycmd-force-semantic-completion t)
+  ;;(require 'ycmd)  
+  (add-hook 'c++-mode-hook 'ycmd-mode)  
+  (add-hook 'compilation-mode-hook #'(lambda() (define-key key-translation-map (kbd "h") (kbd "<left>"))))
+  
+  ;;(require 'company-ycmd)  
+  ;;(company-ycmd-setup)
+  ;;(add-hook 'after-init-hook 'global-company-mode)
+  (require 'helm-bookmark)
+  ;; Chinese Font
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font)
+                    charset (font-spec :family "Microsoft Yahei"
+                                       :size 12)))
+;; run build
 (setq compile-command "build")
+(setq compilation-directory-locked nil)
   
   (defun compile-run-remake ()
    "Run `build` in a compilation buffer."
    (interactive)
    (compile "build"))
+  
 ;;(setq-default c-basic-offset 4
 ;;                  tab-width 4
 ;;				  indent-tabs-mode t)
 				  
-(setq casey-makescript "./build.sh")
+(setq casey-makescript "build.bat")
 (defun find-project-directory-recursive ()
   "Recursively search for a makefile."
   (interactive)
@@ -373,7 +434,14 @@ you should place your code here."
 (global-set-key (kbd "M-[") 'ggtags-find-definition)
 
 (setq c-default-style "ellemtel")
-  )
+
+(defun srs-set-new-sql-file-coding-system ()
+  (setq buffer-file-coding-system 'utf-8-with-signature-dos)
+)
+
+(add-hook 'find-file-not-found-functions 'srs-set-new-sql-file-coding-system)
+)
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -382,9 +450,11 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(package-selected-packages
    (quote
-    (helm-company helm-c-yasnippet fuzzy company-statistics company-c-headers company auto-yasnippet yasnippet ac-ispell auto-complete helm-gtags ggtags disaster cmake-mode clang-format ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async evil-unimpaired f s dash))))
+    (mmm-mode markdown-toc markdown-mode gh-md rainbow-mode rainbow-identifiers color-identifiers-mode color-theme-sanityinc-solarized ample-theme zonokai-theme omnisharp shut-up flycheck csharp-mode sql-indent web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode company-emacs-eclim eclim helm-gtags ggtags web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data powershell disaster company-c-headers cmake-mode clang-format yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic helm-company helm-c-yasnippet fuzzy company-ycmd company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ycmd request-deferred let-alist deferred evil-unimpaired ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
