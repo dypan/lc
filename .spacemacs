@@ -369,7 +369,7 @@ you should place your code here."
   ;;(setq ycmd-force-semantic-completion t)
   ;;(require 'ycmd)  
   (add-hook 'c++-mode-hook 'ycmd-mode)  
-  (add-hook 'compilation-mode-hook #'(lambda() (define-key key-translation-map (kbd "h") (kbd "<left>"))))
+  (add-hook 'compilation-mode-hook #'(lambda() (define-key compilation-mode-map (kbd "h") 'evil-backward-char)))
   
   ;;(require 'company-ycmd)  
   ;;(company-ycmd-setup)
